@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>移动弹出框组件</title>
+	<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+	<meta name="apple-mobile-web-app-capable" content="yes"><!--删除默认的苹果工具栏和菜单栏-->
+	<meta name="apple-mobile-web-app-status-bar-style" content="black"><!--控制状态栏显示样式black\black-translucent-->
+	<meta name="format-detection" content="telphone=no,email=no"><!--忽略页面中的数字识别为电话，忽略email识别为邮箱-->
+	<link rel="stylesheet" type="text/css" href="../css/index.css">
+</head>
+<body>
+<!-- <div>
+	<span class="icon icon-ok"></span>
+	<span class="icon icon-warn"></span>
+	<span class="icon icon-loading"></span>
+</div> -->
+	<button class="btn btn-green" id="btn1">没有传递任何参数（需手动关闭）</button>
+	<button class="btn btn-green" id="btn2">弹出一个不带任何按钮，且是警告的框，并且2秒后自动关闭</button>
+	<button class="btn btn-green" id="btn3">弹出一个有确认和取消按钮的成功框，点击按钮直接关闭</button>
+	<button class="btn btn-green" id="btn4">弹出一个有确认按钮的警告框，点击按钮不关闭（需手动关闭）</button>
+	<button class="btn btn-green" id="btn5">弹出一个多组合的按钮框，且按钮样式可定制</button>
+	<button class="btn btn-green" id="btn6">弹出一个确认和删除的框，点击确认弹出加载框2秒自动关闭，点击删除按钮把上一次框关闭</button>
+	<button class="btn btn-green" id="btn7">带动画的弹框</button>
+	<button class="btn btn-green" id="btn8">弹框层级</button>
+	<button class="btn btn-red" id="btn9">延时关闭加回调</button>
+	<button class="btn btn-red" id="btn10">遮罩层点击是否可以关闭</button>
+	<!-- <div class="g-dialog-container">
+		<div class="dialog-window">
+			<div class="dialog-header">
+				<span class="icon-u icon-u-notification"></span>
+			</div>
+			<div class="dialog-content">你是否要清空购物车？</div>
+			<div class="dialog-footer">
+				<button class="btn btn-green">确认</button>
+				<button class="btn btn-red">取消</button>
+			</div>
+		</div>
+	</div> -->
+	<script type="text/javascript" src="../js/zepto.js"></script>
+	<script type="text/javascript" src="../js/event.js"></script>
+	<script type="text/javascript" src="../js/touch.js"></script>
+	<script type="text/javascript" src="../js/index.js"></script>
+	<script type="text/javascript">
+	$('#btn1').tap(function(){
+		var d = $.dialog({
+			type:'loading',
+			delay:2000
+		});
+	});
+	$('#btn2').tap(function(){
+		var d = $.dialog({
+			type:'warn',
+			delay:2000,
+			message:'2秒后自动关闭'
+		});
+	});
+	$('#btn3').tap(function(){
+		var d = $.dialog({
+			type:'ok',
+			buttons:[
+				{
+					type:'btn-green',
+					text:'确认'
+				},
+				{
+					type:'btn-red',
+					text:'取消'
+				}
+			]
+		});
+	});
+	$('#btn4').tap(function(){
+		var d = $.dialog({
+			type:'warn',
+			buttons:[
+				{
+					type:'btn-green',
+					text:'确认',
+					callback:function(){
+						d.close();
+						return false;
+					}
+				},
+				{
+					type:'btn-red',
+					text:'取消',
+					callback:function(){
+						d.close();
+						return false;
+					}
+				}
+			]
+		});
+	});
+	$('#btn5').tap(function(){
+		var d = $.dialog({
+			type:'loading',
+			message:'多组合按钮框 ',
+			buttons:[
+				{
+					type:'btn-green',
+					text:'确认',
+					callback:function(){
+						d.close();
+						return false;
+					}
+				},
+				{
+					type:'btn-red',
+					text:'取消',
+					callback:function(){
+						d.close();
+						return false;
+					}
+				}
+			]
+		});
+	});
+	$('#btn6').tap(function(){
+		var d = $.dialog({
+			type:'ok',
+			message:'多组合按钮框 ',
+			buttons:[
+				{
+					type:'btn-green',
+					text:'确认',
+					callback:function(){
+						$.dialog({
+							type:'loading',
+							delay:2000
+						});
+					}
+				},
+				{
+					type:'btn-red',
+					text:'删除',
+					callback:function(){
+						$.dialog({
+							type:'warn',
+							buttons:[
+							{
+								type:'btn-green',
+								text:'删除上一次弹框',
+								callback:function(){
+									d.close();
+								}
+							}]
+							
+						});
+						return false;
+					}
+				}
+			]
+		});
+	});
+	$('#btn7').tap(function(){
+		var d = $.dialog({
+			type:'ok',
+			buttons:[
+				{
+					type:'btn-green',
+					text:'确认'
+				},
+				{
+					type:'btn-red',
+					text:'取消'
+				}
+			],
+			effect:true
+		});
+	});
+	$('#btn8').tap(function(){
+		var d = $.dialog({
+			message: '我是first dialog',
+			buttons:[
+				{
+					type:'btn-green',
+					text:'弹出第二个框',
+					callback : function(){
+						$.dialog({
+							type:'ok',
+							message:'我是第二个框',
+							delay:2000,
+							effect:true
+						});
+					}
+				},
+				{
+					type:'btn-red',
+					text:'弹出第三个框',
+					callback : function(){
+						$.dialog({
+							type:'warn',
+							message:'我是第三个框',
+							effect:true,
+							delay:2000
+						});
+					}
+				}
+			],
+			effect:true
+		});
+	});
+	$('#btn9').tap(function(){
+		var d = $.dialog({
+			type:'loading',
+			message:'延时关闭加回调',
+			delay:2000,
+			delayCallback:function(){
+				alert('11');
+			}
+		});
+	});
+	$('#btn10').tap(function(){
+		var d = $.dialog({
+			type:'loading',
+			message:'遮罩层点击是否可以关闭',
+			delay:2000,
+			buttons:[
+				{	
+					type:'btn-green',
+					text:'按钮A'
+				},
+				{
+					type:'btn-red',
+					text:'按钮B',
+					callback:function(){
+						return false;
+					}
+				}
+			],
+			maskOpacity:0.4,
+			maskClose:true
+		});
+	});
+	</script>
+</body>
+</html>
